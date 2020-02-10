@@ -1,8 +1,8 @@
-# Assignment 1: A Basic Flat-Screen Babylon GUI
+# Assignment 2: An Immersive Babylon GUI
 
 This is an INDIVIDUAL assignment.
  
-## Due: Friday Feb 7th, 11:59pm
+## Due: Monday Feb 24th, 11:59pm
 
 ## Name and GT user-id
 
@@ -13,72 +13,97 @@ User ID:
 
 Graded out of 20.
 
-- Menu bar.  4
-- Palette. 4
-- Status bar. 4
-- Default content area and general overall polished appearance content and UI. 4 
-- Proper resize handling (position, size) of menu, palette, status area. 4
+- UI implementations (6 x 2)
+  - Technique for summoning / dismissing menus  (1 pt)
+  - Layout (2 pts)
+  - Interaction (2 pts)
+  - Overall feel of the UI (1+ pts).  High quality can result in > 1 pt.
+- Create boxes and spheres as appropriate (2 pts)
+- Erase boxes and spheres as appropriate (2 pts)
+- Writeup (4 pts)
+  - Justify choices for each of the UI implementations (1 pt)
+  - discuss the pros and cons of each of the two approaches you chose (1 pt)
+  - discuss what worked and what didn't work as well as you liked (1 pt)
+  - reflect on what you would do next with this UI if you had more time (1 pt)
 
 ## Objective
 
-In this homework assignment, we want you to become familiar with the basics of using Babylon's GUI classes to create a 3D GUI interface. You'll be assembling already provided components to create a user interface for a simple application.
+In this homework assignment, we want to move the desktop, flat-screen UI from [assigment 1](https://github.com/3dui-class/s20-a0) into 3D in VR.
 
-Future assignments will build on this first assignment, so it's important for you to get this one right and to understand what you have done.
+You should implement exactly the same set of interface components as A1, except now the elements will be placed in 3D VR space.  You will implement 2 versions of the 3D UI, and write a short reflection on the pros and cons of each, and the difficulties and challenges you encountered during your implementation.
 
-PLEASE NOTE: You are NOT allowed to use the Bablyon GUI xml file specification, or any other tools to help you lay out the components. The reason is that this assignment is designed to get you up-to-speed by writing some basic Babylon GUI code; if you're using some of the automation, you're not getting that practice.
+PLEASE NOTE: Unlike A1, you are allowed to use the Bablyon GUI xml file specification or other tools to help you lay out the components. Since you already have the basic components arranged in UIs at this point, this may not be necessary. but you are free to use these tools if you want.
 
-PLEASE NOTE: All of the UI elements should be done with Babylon.  Do NOT use any HTML/CSS elements for your UI.
+PLEASE NOTE: As with A1, all of the UI elements should be done with Babylon.  Do not try to use any HTML/CSS elements for your UI, since they do not work in VR.
 
 If you're unsure about the tools you're using, check with us first.
 
 ## Description
 
-During the three non-project assignments this semester, we will be creating an interactive 3D drawing program. Each homework assignment will build on the previous one, focusing on different aspects of the 3D interface. Please note that since this will be a continuing assignment that we'll build on in successive parts throughout the semester, it's important not to fall behind!  (Note: exactly what the next two assignments focus on will depend on if/when we get our VR hardware.)
+During the three non-project assignments this semester, we will be creating an interactive 3D drawing program. Each homework assignment will build on the previous one, focusing on different aspects of the 3D interface. Please note that since this will be a continuing assignment that we'll build on in successive parts throughout the semester, it's important not to fall behind! 
 
-In this first homework we'll create a basic application, using existing Babylon GUI components. You'll get experience working with the component hierarchy, doing layout, and writing event-driven code in the form of Listeners.
+In this second homework we'll take the basic application created in A1, using existing Babylon GUI components, and move it to VR. You'll get experience working with the component hierarchy in full immersive 3D, managing layout in 3D, and thinking about the issues with creating immersive UIs.
 
-## Basic Interface Layout
+## Multiple ways to display menus in Immersive 3D
 
-Your application will create a 3D canvas when it starts. Inside this canvas will be several main areas:
+When using a 2D screen for a 3D UI, the menus and many interactions are best implemented in the 2D plane of the screen (i.e., as a 2D interface, as we did in A1).  In immersive AR and VR, there is no 2D screen on which to place menus and controls.
 
-1. A menu bar across the top of the canvas. Use the ```AdvancedDynamicTexture.CreateFullscreenUI``` UI to create a full screen overlay, and then add a region to the top to serve as a menu bar. You should have three top-level menu items: File, Edit, and View. Under the File menu should be menu items for New, Load, Save, and Quit. Under the View menu should be menu items for Next and Previous. The Edit menu can be empty for now (in other words, it will appear on the menu bar but will have nothing selectable under it). For an example of how to create a drop down menu using Babylon's GUI, see examples such as [this](https://www.babylonjs-playground.com/#H10NI4#5) Playground example.
+Immersive applications have tried many approaches over the years.  We will focus here on 2D interaction elements (e.g., buttons, color palettes, menus) of the sort we implemented in A1. Here are two examples, one of the flat plane containing UI elements (from No Man's Sky) and one of elements attached to a controller (in A-Painter):
 
-2. A main content area. Create a reasonable 3D environment such as the one created by ```createDefaultEnvironment```.  In the next assignment, this is where drawn content will go, but for now it will just appear as a mostly-empty space. This content area should take up most of the area of the canvas of your application.
+![A Flat UI in No Man's Sky](/images/no-mans-sky.png)
 
-3. A status bar at the bottom of the window. This will be a scrollable text area that spans the width of the window, and which will be used for debugging messages and other informative text content. The text area should have a narrow region at the top (akin to a title bar) and the following behavior:
-  - normally, one line of text and the top border bar are visible. Clicking on the top border bar causes the window to expand up to show the full scrollable region. 
-  - clicking on the bar again causes it to slide down and only show one line.
-  - pick a large-yet-reasonable maximum size of the status text area (either lines or bytes), and when new messages are added, remove old content that exceeds this threshold.
+![2D elements attached to a controller in A-Painter](/images/apainter.png)
 
-4. A tool palette along the left edge of the window. This is where the drawing controls will go for your application. For now, you'll need to add the following buttons to the tool palette:
+Some examples of possible ways of laying out these 2D widgets in 3D include:
 
-- Line tool
-- Pen tool
-- Eraser tool
-- Brush Menu 
-- Color Picker
+1. arrange them on a plane fixed in space (only appropriate if the working area is small, so not appropriate in this assignment) 
+2. arrange them on a plane position in front of the user, summoned via some user action (e.g., pressing a button on a controller, or selecting a virtual button located in 3D)  (Babylon provides helpers for this)
+3. similar, but have the plane move to remain in the user's view as they look around.  Typically, this sort of "follow the user's gaze" behavior has some kind of latency so as to appear stable.  So, if the 2D plane is in view, but not centered, it will not reposition.  If it is mostly out of view for some time interval, it slides into view.  And so forth.
+3. arrange them similarly on a curved surface (cylindrical or spherical).  (Babylon provides helpers for this)
+4. arrange them on the floor around the user's feet, either continuously or when summoned.
+5. arrange them on a 3D object (e.g., cube, series of planes) attached to the users hand, arm, or controller. Typically, the menus would be attached to one side and the controller or fingers on the other hand would interact with them.  The different parts of the menu might be accessed by physically rotating the controller/hand/arm, or by using buttons or gestures on that controller/hand to rotate or cycle through different parts of the UI
 
-These should be arranged in one column in the tool palette. One of Line, Pen, and Eraser should always be selected.  Clicking on the Brush Menu causes a brush palette to slide out from under the tool palette.  Is should be the same height as the tool palette, and have at least two columns of texture images that represent different kinds and textures of brushes (use any images you like.)  The Color Picker should slide the Babylon Color Picker out from under the tool palette.  Clicking either button again hides the palette, and clicking one when the other is open first hides the open one and then slides out the selected one. 
+For this assignment, you will pick two different approaches, implement them, and reflect on the differences.  If you want to try something not listed here, please check with the instructor.
+
+You should pick two approaches that are not similar.  For example, positioning content on a plane and a cylinder near the user is not different enough.  
+
+## Interface Layout and Controls
+
+You should take your implementation of A1, and add the [WebXR Experience Helpers](https://doc.babylonjs.com/how_to/webxr_experience_helpers#exiting-xr) to support entering/exiting WebXR mode, and providing support for the XR camera, pointers, teleportation, and so on.
+
+You should add a simple UI to the main 2D web page to select between your two immersive menu implementations before entering immersive mode.  You do not need to support switching between the two implementations in immersive mode.  You may implement this as you desire.  You might implement these as entirely different web pages, with the initial "menu" being a link to each page.  You might implement these as a single page, where the menu sets a flag and causes different menu code to run when you enter immersive mode.  Whichever you prefer is fine. 
+
+You can leave the GUI from A1 visible in non-XR mode and restructure it in immersive mode, or remove it and only show the menus in immersive mode.
+
+1. The menu bar will very likely have to change, for some of the implementations.  You are free to decide on how best to display the same set of menu items.
+
+2. The status bar should be included and have similar functionality, but (again) can be arranged as appropriate.  The key is that you can see a condensed (single line) version and expand it to see more. 
+
+3. A tool palette, and sub-palettes (brush menu and color picker) can be arranged as you desire in your UI.
 
 ## Interactivity
 
-Your application doesn't need to be able to draw anything yet. But it still will have some key pieces of interactivity; we'll fill in the rest in the second homework. The things your application needs to do at this point are mostly provided by Babylon, but you should ensure they are correctly working:
+Your application should create a cube (line tool) or sphere (pen tool) at the tip fo the controller when the trigger is pressed.  The cube should be a reasonable, but small, size (e.g., 2-5cm across, as you desire) (If you implemented brush size for A1, or want to implement it now, you can use that to size the cubes and spheres).  It should have the color and texture currently selected in the UI.  When the eraser is selected, and the button is pressed, any cube or sphere that the tip of the controller is in should be deleted.   (This will require you to keep a list of all the cubes and spheres you have created, and check the position of the controller against each one when the button is pressed.)
 
-- Button feedback. Clicking on any of the buttons in the tool palette should display a status message in the text area, indicating what was pressed (e.g., the status bar should show "Pen tool clicked" or some such). Note that the first three buttons in the tool palette should be modal. This means that once a button is clicked, it stays in the "pressed" state until another button is clicked.
-- Menu feedback. When any menu item is clicked, it should similarly display a text message in the status area.
--  Resizing. The application should behave "reasonably" when it's resized. Note that it's hard to describe every aspect of good resize behavior, but in general your application should behave like normal, commercial applications: the tool palette should be just wide enough to contain the tool buttons in it, and not get larger or smaller as the window is resized; the tool buttons themselves shouldn't spread out or get bigger or smaller as the window is resized. The status bar label should only grow and shrink horizontally, not vertically.       
+You will have to pick some way to summon the menus and dismiss them. You could dedicate a controller button to it.  You could have an initial small set of buttons on one of the controllers that summon the full menus when clicked.  Think about what you would like to use.
+
+To interact with the elements, you should consider the options of how to interact with the elements. You have different techniques you can use, including shooting a ray from the controller, using virtual touch controls with the tip of the controller, using the joysticks on the controllers, or some combination of these. 
+
+Beyond this basic functionality, you should focus on making the menu implementations as pleasant to use as possible. Think carefully about size, how they behave, where they appear relative to the user's viewpoint, etc.  
+
+You should try to reuse the UI elements from A1 as much as possible, rearranging and restructuring them as necessary.
+
+## Writeup
+
+Put your writeup in [writeup.md](writeup.md) and include it with your submission.
+
+The requirements for what we want to see are listed in the rubric.  If you have questions, please ask on the Teams Assignment2 channel, so that everyone can benefit from the answers.
 
 ## Extra Credit
 
-In this and future assignments we'll suggest some ways you can earn extra credit on the project.  You can get a maximum of 10% of the value of the assignment extra.
+We are not providing specific ideas for extra credit on this assignment, beyond the potential bonus for very high quality "feel" of the implementation. 
 
-Some possibilities for this assignment (each worth 1/20) are:
-
-- Add a "brush size" palette, that has a slider and numeric text area to adjust the brush width. It should display the current brush texture, and stretch the width of the texture using a slider of some form.
-- Add some simple content.  When you click on the ground plane in the default environment, it should add a random object (cube, sphere, etc) with a random size, decorated with the current brush texture and color.
-
-If you have other ideas for extra credit, please ask in the Assignment1 channel on Teams, and we can discuss it.  
-(I would like such discussions to be public in the class, so that everyone has the same opportunities.)
+If you have other ideas for extra credit, please ask in the Assignment2 channel on Teams, and we can discuss it.   (I would like such discussions to be public in the class, so that everyone has the same opportunities.)
 
 ## Submission
 

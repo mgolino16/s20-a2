@@ -7,5 +7,11 @@ module.exports = {
             test: /\.tsx?$/,
             loader: 'ts-loader'
         }]
-    }
+    },
+    devServer: {
+        compress: true,
+        disableHostCheck: true   // That solved it
+    }    
 }
+
+

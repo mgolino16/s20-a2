@@ -208,15 +208,9 @@ class Playground {
                             newSphere.material = newMat;
 
 
-                            createdMeshesArray.push(newSphere); //should we just add name instead of entire object? Does it matter?
+                            createdMeshesArray.push(newSphere); 
                         }
                         else if (fsm.currentState == ToolSelection.Eraser) {
-                            //if (webVRController.mesh?._intersectionsInProgress) {
-                            //    for (var i = 0; i < createdMeshesArray.length; i++) {
-                            //        webVRController.mesh.intersectsMesh(createdMeshesArray[i])
-                            //    }
-                            //}
-
 
                             var eraseRayIntersections = webVRController.getForwardRay(0.05).intersectsMeshes(<Array<DeepImmutable<AbstractMesh>>>createdMeshesArray);
                             for (var i = 0; i < eraseRayIntersections.length; i++) {

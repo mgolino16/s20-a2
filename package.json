@@ -3,9 +3,13 @@
     "version": "1.0.0",
     "description": "Sample for Assignment 0, CS 4803/8803 3DUI, Spring 2020",
     "main": "index.ts",
-    "dependencies": {},
+    "dependencies": {
+        "babylonjs": "^4.1.0",
+        "babylonjs-gui": "^4.1.0",
+        "typestate": "^1.0.6"
+    },
     "devDependencies": {
-        "@babylonjs/core": "^4.0.3",
+        "@babylonjs/core": "^4.1.0",
         "@babylonjs/gui": "^4.0.3",
         "@babylonjs/materials": "^4.0.3",
         "ts-loader": "^6.2.1",
